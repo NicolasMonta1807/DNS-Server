@@ -14,7 +14,7 @@ public class DNS {
             DataInputStream request = UDPSocket.receiveRequest();
             ResolverHelper.getDatagramId(request);
             List<Integer> flags = ResolverHelper.processFlags(request);
-            // Logger.Info(flags.toString());
+            Logger.OutputFlags(flags);
             Logger.Info("---------------");
         }
     }

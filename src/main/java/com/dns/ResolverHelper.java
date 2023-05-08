@@ -17,33 +17,18 @@ public class ResolverHelper {
         List<Integer> basicFlags = new ArrayList<>();
         int QR = (flags & 0x10000000) >>> 7;
         basicFlags.add(QR);
-        if (QR == 0) {
-            Logger.Info("Type: Query");
-        } else {
-            Logger.Info("Type: Response");
-        }
         int opCode = (flags & 0x01111000) >>> 3;
         basicFlags.add(opCode);
-        if (opCode == 0) {
-            Logger.Info("Option: Standard");
-        } else {
-            Logger.Info("Option: Other");
-        }
+
         int AA = (flags & 0x00000100) >>> 2;
         basicFlags.add(AA);
-        if (AA == 1) {
-            Logger.Info("Authoritative Answer");
-        }
+
         int TC = (flags & 0x00000010) >>> 1;
         basicFlags.add(TC);
-        if (TC == 1) {
-            Logger.Info("This message was truncated");
-        }
+
         int RD = (flags & 0x00000001);
         basicFlags.add(RD);
-        if (RD == 1) {
-            Logger.Info("Recursion desired");
-        }
+
         flags = datagram.readByte();
         int RA = (flags & 0x10000000) >>> 7;
         int Z = (flags & 0x01110000) >>> 4;
@@ -52,6 +37,7 @@ public class ResolverHelper {
         short ANCOUNT = datagram.readShort();
         short NSCOUNT = datagram.readShort();
         short ARCOUNT = datagram.readShort();
+
         return basicFlags;
     }
 }
