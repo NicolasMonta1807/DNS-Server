@@ -2,6 +2,7 @@ package com.dns;
 
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,5 +40,27 @@ public class ResolverHelper {
         short ARCOUNT = datagram.readShort();
 
         return basicFlags;
+    }
+
+    public static List<String> processQuestion(DataInputStream datagram) throws IOException {
+        List<String> question = new ArrayList<>(3);
+        int recordLen;
+        String QNAME = "";
+        while ((recordLen = datagram.readByte()) > 0) {
+            if (recordLen != 0 && !QNAME.equals("")) {
+                QNAME += ".";
+            }
+            byte[] record = new byte[recordLen];
+            for (int i = 0; i < recordLen; i++) {
+                record[i] = datagram.readByte();
+            }
+            QNAME += new String(record, StandardCharsets.UTF_8);
+        }
+        short QTYPE = datagram.readShort();
+        short QCLASS = datagram.readShort();
+        question.add(QNAME);
+        question.add(String.format("%s", QTYPE));
+        question.add(String.format("%s", QCLASS));
+        return question;
     }
 }

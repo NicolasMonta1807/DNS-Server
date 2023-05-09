@@ -7,7 +7,7 @@ public class Logger {
         System.out.println(info);
     }
 
-    public static void OutputFlags(List<Integer> flags) {
+    public static void outputFlags(List<Integer> flags) {
         if (flags.get(0) == 0) {
             Logger.Info("Type: Query");
         } else {
@@ -31,5 +31,11 @@ public class Logger {
         if (flags.get(4) == 1) {
             Logger.Info("Recursion: Desired");
         }
+    }
+
+    public static void outputQuestion(List<String> question) {
+        Logger.Info("Resolving: " + question.get(0));
+        Logger.Info("Record Type: " + question.get(1));
+        Logger.Info("Class: " + question.get(2));
     }
 }

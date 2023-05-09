@@ -12,9 +12,11 @@ public class DNS {
         while (true) {
             Logger.Info("---------------");
             DataInputStream request = UDPSocket.receiveRequest();
-            ResolverHelper.getDatagramId(request);
+            int datagramId = ResolverHelper.getDatagramId(request);
             List<Integer> flags = ResolverHelper.processFlags(request);
-            Logger.OutputFlags(flags);
+            Logger.outputFlags(flags);
+            List<String> question = ResolverHelper.processQuestion(request);
+            Logger.outputQuestion(question);
             Logger.Info("---------------");
         }
     }
