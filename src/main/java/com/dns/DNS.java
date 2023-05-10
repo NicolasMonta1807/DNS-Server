@@ -1,7 +1,12 @@
 package com.dns;
 
+import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
+import java.sql.PreparedStatement;
 import java.util.List;
 
 public class DNS {
@@ -11,12 +16,28 @@ public class DNS {
 
         while (true) {
             Logger.Info("---------------");
+
             DataInputStream request = UDPSocket.receiveRequest();
+
+            // Process request section
             int datagramId = ResolverHelper.getDatagramId(request);
-            List<Integer> flags = ResolverHelper.processFlags(request);
-            Logger.outputFlags(flags);
-            List<String> question = ResolverHelper.processQuestion(request);
-            Logger.outputQuestion(question);
+
+            List<Integer> requestFlags = ResolverHelper.processFlags(request);
+            Logger.outputFlags(requestFlags);
+
+            List<Short> requestCounts = ResolverHelper.processCounts(request);
+
+
+            List<String> requestQuestion = ResolverHelper.processQuestion(request);
+            Logger.outputQuestion(requestQuestion);
+
+            // Resolving hostname address
+            byte[] resolvedIP = Master.resolveIP(requestQuestion.get(0));
+
+            // Send response
+            ByteArrayOutputStream response = ResolverHelper.createResponse(datagramId, requestFlags, requestCounts, requestQuestion, resolvedIP);
+            UDPSocket.sendResponse(response.toByteArray());
+
             Logger.Info("---------------");
         }
     }
