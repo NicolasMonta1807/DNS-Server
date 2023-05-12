@@ -1,2 +1,9 @@
 # Compiling
 /target
+
+# IDE Files 
+/.idea
+/.vscode
+
+# Local MasterFile
+MasterFile.txt
