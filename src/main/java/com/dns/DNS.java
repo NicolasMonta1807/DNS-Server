@@ -29,6 +29,7 @@ public class DNS {
 
             // Resolving hostname address
             byte[] resolvedIP = Master.resolveIP(requestQuestion.get(0));
+            // TODO: Add error catching for non-implemented queries
 
             // Send response
             ByteArrayOutputStream response = ResolverHelper.createResponse(datagramId, requestFlags, requestCounts, requestQuestion, resolvedIP);

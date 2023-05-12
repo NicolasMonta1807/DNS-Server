@@ -38,4 +38,6 @@ public class Logger {
         Logger.Info("Record Type: " + question.get(1));
         Logger.Info("Class: " + question.get(2));
     }
+
+    // TODO: Add response status log
 }

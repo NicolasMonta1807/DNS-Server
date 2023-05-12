@@ -4,9 +4,9 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 public class Master {
-
+    // TODO: Create resolving IP functionality
+    // TODO: Add MasterFile reading and mapping
     public static byte[] resolveIP (String hostname) throws UnknownHostException {
-        // TODO: Create resolving IP functionality
         try {
             byte[] address = InetAddress.getByName(hostname).getAddress();
             return address;
