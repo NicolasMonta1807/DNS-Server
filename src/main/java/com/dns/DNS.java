@@ -2,11 +2,7 @@ package com.dns;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
-import java.sql.PreparedStatement;
 import java.util.List;
 
 public class DNS {
