@@ -28,7 +28,7 @@ public class DNS {
             Logger.outputQuestion(requestQuestion);
 
             // Resolving hostname address
-            byte[] resolvedIP = Master.resolveIP(requestQuestion.get(0));
+            byte[] resolvedIP = Master.ResolveIP(requestQuestion.get(0));
             // TODO: Add error catching for non-implemented queries
 
             // Send response
