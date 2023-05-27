@@ -27,11 +27,11 @@ public class Master {
         }
     }
 
-    public static byte[] ResolveIP(String hostname) {
+    public static byte[] ResolveIP(String hostname) throws UnknownHostException {
         try {
             String resolve = IPs.get(hostname);
             if (resolve != null) {
-                return resolve.getBytes();
+                return InetAddress.getByName(resolve).getAddress();
             } else {
                 InetAddress address = InetAddress.getByName(hostname);
                 IPs.put(address.getHostName(), address.getHostAddress());
@@ -39,8 +39,7 @@ public class Master {
                 return address.getAddress();
             }
         } catch (UnknownHostException e) {
-            String errorIP = "0.0.0.0";
-            return errorIP.getBytes();
+            return InetAddress.getByName("0.0.0.0").getAddress();
         }
     }
 
