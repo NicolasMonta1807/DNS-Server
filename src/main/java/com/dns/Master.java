@@ -28,8 +28,9 @@ public class Master {
     }
 
     public static byte[] ResolveIP(String hostname) throws UnknownHostException {
+        String resolve = "";
         try {
-            String resolve = IPs.get(hostname);
+            resolve = IPs.get(hostname);
             if (resolve != null) {
                 return InetAddress.getByName(resolve).getAddress();
             } else {
@@ -40,6 +41,8 @@ public class Master {
             }
         } catch (UnknownHostException e) {
             return InetAddress.getByName("0.0.0.0").getAddress();
+        } finally {
+            Logger.Info("Resolved to: " + resolve);
         }
     }
 

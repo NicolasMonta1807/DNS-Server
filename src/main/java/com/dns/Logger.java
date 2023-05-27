@@ -7,7 +7,8 @@ public class Logger {
         System.out.println(info);
     }
 
-    public static void outputFlags(List<Integer> flags) {
+    public static void outputFlags() {
+        List<Integer> flags = Query.getQueryFlags();
         if (flags.get(0) == 0) {
             Logger.Info("Type: Query");
         } else {
@@ -33,11 +34,10 @@ public class Logger {
         }
     }
 
-    public static void outputQuestion(List<String> question) {
+    public static void outputQuestion() {
+        List<String> question = Query.getQueryQuestion();
         Logger.Info("Resolving: " + question.get(0));
         Logger.Info("Record Type: " + question.get(1));
         Logger.Info("Class: " + question.get(2));
     }
-
-    // TODO: Add response status log
 }

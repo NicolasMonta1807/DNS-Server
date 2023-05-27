@@ -1,5 +1,6 @@
 package com.dns;
 
+import javax.xml.crypto.Data;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -79,16 +80,21 @@ public class ResolverHelper {
         return question;
     }
 
-    public static void createResponseHeader(DataOutputStream response, int datagramId, List<Integer> requestFlags, List<Short> requestCounts) throws IOException {
+    public static void createResponseHeader(DataOutputStream response) throws IOException {
         String flags = "";
         flags += ("1"); //QR set to 1 due to being a response
         flags += ("0000"); //OPCODE set to 0 due to being a standard query
         flags += ("0"); // AA set to 0 due to not being an answer in this zone
         flags += ("0"); // TC set to 0 since this message should not be truncated
-        flags += (String.valueOf(requestFlags.get(4))); // RD set to the same option sent in request
+        flags += (String.valueOf(Query.getQueryFlags().get(4))); // RD set to the same option sent in request
         flags += ("0"); // RA set to 0 since recursion is not implemented in this server
         flags += ("000"); // Z set to 0 since it is reserved for future use
-        flags += ("0000"); // Response Code set to 0 for no error condition (Yet to be implemented)
+        if(Query.getQueryQuestion().get(1).equals("1")) {
+            flags += ("0000"); // Response Code set to 0 for no error condition
+        } else {
+            Logger.Info("\t!Query Type Not Implemented! - Answered with Type A Record");
+            flags += ("0100"); // Response Code set to 0 for no error condition
+        }
 
         // Parsing the flags String into an array of bytes to be sent in the response
         int flagsAux = Integer.parseInt(flags, 2);
@@ -97,17 +103,19 @@ public class ResolverHelper {
         // Setting header counts according to request
         short ANCOUNT = Short.parseShort("0000000000000001"); // Setting answer count to 1 since server is sending only one response
 
-        response.writeShort(datagramId);
+
+
+        response.writeShort(Query.getDatagramID());
         response.write(flagsAuxByte);
-        response.writeShort(requestCounts.get(0));
+        response.writeShort(Query.getQueryCounts().get(0));
         response.writeShort(ANCOUNT);
-        response.writeShort(requestCounts.get(2));
-        response.writeShort(requestCounts.get(3));
+        response.writeShort(Query.getQueryCounts().get(2));
+        response.writeShort(Query.getQueryCounts().get(3));
     }
 
-    public static void createResponseQuestion(DataOutputStream response, List<String> requestQuestion) throws IOException {
+    public static void createResponseQuestion(DataOutputStream response) throws IOException {
         // Writing QNAME to response datagram
-        String[] hostname = requestQuestion.get(0).split("\\.");
+        String[] hostname = Query.getQueryQuestion().get(0).split("\\.");
         for (String s : hostname) {
             response.writeByte(s.length());
             response.write(s.getBytes());
@@ -131,15 +139,15 @@ public class ResolverHelper {
         response.write(resolvedIP);
     }
 
-    public static ByteArrayOutputStream createResponse(int datagramId, List<Integer> requestFlags, List<Short> requestCounts, List<String> requestQuestion, byte[] resolvedIP) throws IOException {
+    public static ByteArrayOutputStream createResponse(byte[] resolvedIP) throws IOException {
 
         // Writing header information to datagram
         ByteArrayOutputStream outBytes = new ByteArrayOutputStream();
         DataOutputStream response = new DataOutputStream(outBytes);
 
-        createResponseHeader(response, datagramId, requestFlags, requestCounts);
+        createResponseHeader(response);
 
-        createResponseQuestion(response, requestQuestion);
+        createResponseQuestion(response);
 
         createResponseAnswer(response, resolvedIP);
 

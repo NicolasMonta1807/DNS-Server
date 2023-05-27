@@ -17,22 +17,21 @@ public class DNS {
 
             // Process request section
             int datagramId = ResolverHelper.getDatagramId(request);
+            Query.setDatagramID(datagramId);
 
-            List<Integer> requestFlags = ResolverHelper.processFlags(request);
-            Logger.outputFlags(requestFlags);
+            Query.setQueryFlags(ResolverHelper.processFlags(request));
+            Logger.outputFlags();
 
-            List<Short> requestCounts = ResolverHelper.processCounts(request);
+            Query.setQueryCounts(ResolverHelper.processCounts(request));
 
-
-            List<String> requestQuestion = ResolverHelper.processQuestion(request);
-            Logger.outputQuestion(requestQuestion);
+            Query.setQueryQuestion(ResolverHelper.processQuestion(request));
+            Logger.outputQuestion();
 
             // Resolving hostname address
-            byte[] resolvedIP = Master.ResolveIP(requestQuestion.get(0));
-            // TODO: Add error catching for non-implemented queries
+            byte[] resolvedIP = Master.ResolveIP(Query.getQueryQuestion().get(0));
 
             // Send response
-            ByteArrayOutputStream response = ResolverHelper.createResponse(datagramId, requestFlags, requestCounts, requestQuestion, resolvedIP);
+            ByteArrayOutputStream response = ResolverHelper.createResponse(resolvedIP);
             UDPSocket.sendResponse(response.toByteArray());
 
             Logger.Info("---------------");
