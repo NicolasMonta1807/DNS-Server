@@ -15,9 +15,7 @@ public class DNS {
 
             DataInputStream request = UDPSocket.receiveRequest();
 
-            // Process request section
-            int datagramId = ResolverHelper.getDatagramId(request);
-            Query.setDatagramID(datagramId);
+            Query.setDatagramID(ResolverHelper.getDatagramId(request));
 
             Query.setQueryFlags(ResolverHelper.processFlags(request));
             Logger.outputFlags();
@@ -27,10 +25,8 @@ public class DNS {
             Query.setQueryQuestion(ResolverHelper.processQuestion(request));
             Logger.outputQuestion();
 
-            // Resolving hostname address
             byte[] resolvedIP = Master.ResolveIP(Query.getQueryQuestion().get(0));
 
-            // Send response
             ByteArrayOutputStream response = ResolverHelper.createResponse(resolvedIP);
             UDPSocket.sendResponse(response.toByteArray());
 
