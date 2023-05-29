@@ -10,9 +10,7 @@ import java.net.SocketException;
 
 public class Socket {
     final int PORT = 53;
-
-    byte[] buffer = new byte[1024];
-
+    byte[] buffer = new byte[512];
     DatagramSocket socket = new DatagramSocket(PORT);
     DatagramPacket query = new DatagramPacket(buffer, buffer.length);
 
